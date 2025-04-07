@@ -17,3 +17,11 @@ class Product(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField("DEFAULT DESCRIPTION", max_length=512)
     
+class Message(models.Model):
+    # maybe change up later 
+    # to keep messages between 
+    # users even if a user is deleted
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    reciever = models.ForeignKey(User, on_delete=models.CASCADE)
+    msg = models.CharField(default="DEFAULT", max_length=255)
+    time_sent = models.DateTimeField(auto_now_add=True)
