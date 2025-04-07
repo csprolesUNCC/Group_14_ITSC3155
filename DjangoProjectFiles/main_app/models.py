@@ -15,5 +15,5 @@ class Product(models.Model):
     title = models.CharField("DEFAULT TITLE", max_length=250)
     isbn = models.CharField("-------------", max_length=13)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+    description = models.CharField("DEFAULT DESCRIPTION", max_length=512)
     
