@@ -2,34 +2,36 @@
 
 {% block content %}
 
-<div>
-    <a href="">Back to Message Hub</a>
+<!-- user chats side bar -->
+<div class="sidebar">
+    <!-- for each chat ... -->
+    <div>
+        <p>USERNAME OF CHATTER</p>
+    </div>
 </div>
 
-<!-- display textbox to send chat -->
-<div>
-    <form action="">
-        <fieldset>
-            <legend>Message to RECIEVER'S USERNAME PLACEHOLDER</legend>
-            <textarea name="message_to_send"></textarea><br>
+<!-- user chat main screen -->
+<div class="main-block">
+
+    <!-- display textbox to send chat -->
+    <div class="send-message-block">
+        <form action="">
+            <input type="text" maxlength="255">
             <input type="submit" value="Send">
-        </fieldset>
-    </form>
-</div>
+        </form>
+    </div>
 
-<!-- display chats with the last to first -->
+    <!-- display chats with the last to first -->
+    
+    <!-- for each chat shared betwenn current user and this user -->
+    <div class="messages-block">
+        <div class="message"> 
+            <p>From: SENDER'S USERNAME PLACEHOLDER</p><br>
+            <p>TIMESTAMP PLACEHOLDER - FORMAT: DD/MM/YYYY HH:MM</p><br>
+            <p>MESSAGE PLACEHOLDER</p><br>
+        </div>
+    </div>
 
-<!-- for each chat shared betwenn current user and this user -->
-<div>   
-    <div>
-        <p>From: SENDER'S USERNAME PLACEHOLDER</p>
-    </div>
-    <div>
-        <p>TIMESTAMP PLACEHOLDER - FORMAT: DD/MM/YYYY HH:MM</p>
-    </div>
-    <div>
-        <p>MESSAGE PLACEHOLDER</p>
-    </div>
 </div>
 
 {% endblock content %}
