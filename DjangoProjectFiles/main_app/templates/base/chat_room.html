@@ -7,23 +7,23 @@
 </div>
 
 <!-- display textbox to send chat -->
-<div class="send-message-block">
+<div class="send-chat-block">
     <form action="" method="POST">
         {% csrf_token %}
-        <input name="message" type="text" maxlength="255">
+        {{ form }}
         <input type="submit" value="Send">
     </form>
 </div>
 
 <!-- display chats with the last to first -->
 
-<!-- for each chat shared betwenn current user and this user -->
-<div class="messages-block">
-    {% for message in messages %}
-    <div class="message"> 
-        <p>From: {{message.sender.username}}</p>
-        <p>{{message.time_sent}}</p><br>
-        <p>{{messahe.msg}}</p><br>
+<!-- for each chat in messages -->
+<div class="chats-block">
+    {% for chat in chats %}
+    <div class="chat"> 
+        <p>From: {{chat.sender}}</p>
+        <p>TODO: time_sent to string</p><br>
+        <p>{{chat.body}}</p><br>
     </div>
     {% endfor %}
 </div>

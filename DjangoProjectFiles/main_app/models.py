@@ -13,15 +13,12 @@ from django.contrib.auth.models import User
 #
 class Product(models.Model):
     title = models.CharField("DEFAULT TITLE", max_length=250, null=False)
-    uploader = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    uploader = models.CharField(max_length=150, null=False)
     isbn = models.CharField("-------------", max_length=13, null=True)
     description = models.CharField("DEFAULT DESCRIPTION", max_length=512, null=True)
     
-class Message(models.Model):
-    # maybe change up later 
-    # to keep messages between 
-    # users even if a user is deleted
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
-    msg = models.CharField(default="DEFAULT", max_length=255)
+class Chats(models.Model):
+    sender = models.CharField(max_length=150, related_name="sender")
+    receiver = models.CharField(max_length=150, related_name="receiver")
+    body = models.CharField(default="DEFAULT", max_length=255)
     time_sent = models.DateTimeField(auto_now_add=True)
