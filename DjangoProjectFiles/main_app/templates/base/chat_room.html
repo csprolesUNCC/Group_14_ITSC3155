@@ -2,36 +2,30 @@
 
 {% block content %}
 
-<!-- user chats side bar -->
-<div class="sidebar">
-    <!-- for each chat ... -->
-    <div>
-        <p>USERNAME OF CHATTER</p>
-    </div>
+<div class="back_link">
+    <a href="{% url 'chat_hub' %}">Back</a>
 </div>
 
-<!-- user chat main screen -->
-<div class="main-block">
+<!-- display textbox to send chat -->
+<div class="send-message-block">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input name="message" type="text" maxlength="255">
+        <input type="submit" value="Send">
+    </form>
+</div>
 
-    <!-- display textbox to send chat -->
-    <div class="send-message-block">
-        <form action="">
-            <input type="text" maxlength="255">
-            <input type="submit" value="Send">
-        </form>
+<!-- display chats with the last to first -->
+
+<!-- for each chat shared betwenn current user and this user -->
+<div class="messages-block">
+    {% for message in messages %}
+    <div class="message"> 
+        <p>From: {{message.sender.username}}</p>
+        <p>{{message.time_sent}}</p><br>
+        <p>{{messahe.msg}}</p><br>
     </div>
-
-    <!-- display chats with the last to first -->
-    
-    <!-- for each chat shared betwenn current user and this user -->
-    <div class="messages-block">
-        <div class="message"> 
-            <p>From: SENDER'S USERNAME PLACEHOLDER</p><br>
-            <p>TIMESTAMP PLACEHOLDER - FORMAT: DD/MM/YYYY HH:MM</p><br>
-            <p>MESSAGE PLACEHOLDER</p><br>
-        </div>
-    </div>
-
+    {% endfor %}
 </div>
 
 {% endblock content %}
