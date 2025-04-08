@@ -7,4 +7,4 @@ def chat_page(request, pk):
 
     # curr_user = request.user.
 
-    return render()
+    return render(request, 'base/chat_room.html')
