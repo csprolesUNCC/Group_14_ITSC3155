@@ -2,7 +2,17 @@
 
 {% block content %}
 
-<div class="back_link">
+<style>
+.chats_block {
+    width: 200px;
+    
+}
+small.chats_block {
+    text-align: right;
+}
+</style>
+
+<div>
     <a href="{% url 'chat_hub' %}">Back</a>
 </div>
 
@@ -10,22 +20,33 @@
 <div class="send-chat-block">
     <form action="" method="POST">
         {% csrf_token %}
-        {{ form }}
+        <label>Send a message to {{receiver}}:</label><br>
+        <input type="text" name="body">
+        <input type="hidden" name="sender" value="{{sender}}">
+        <input type="hidden" name="receiver" value="{{receiver}}">
         <input type="submit" value="Send">
     </form>
 </div>
 
-<!-- display chats with the last to first -->
+
+<!-- display chats (if any) with recents first -->
 
 <!-- for each chat in messages -->
 <div class="chats-block">
-    {% for chat in chats %}
-    <div class="chat"> 
-        <p>From: {{chat.sender}}</p>
-        <p>TODO: time_sent to string</p><br>
-        <p>{{chat.body}}</p><br>
-    </div>
-    {% endfor %}
+    {% if chats %}
+        {% for chat in chats %}
+        <div class="chats-chat"> 
+            From: {{chat.sender}}
+            <small>{{chat.time_sent}}</small>
+            <p>{{chat.body}}</p>
+            <br>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div>
+            <p>There are no previous chats between you and {{receiver}}.<br>Send a message to start a chain.</p>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock content %}

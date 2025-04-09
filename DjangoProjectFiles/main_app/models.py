@@ -17,8 +17,8 @@ class Product(models.Model):
     isbn = models.CharField("-------------", max_length=13, null=True)
     description = models.CharField("DEFAULT DESCRIPTION", max_length=512, null=True)
     
-class Chats(models.Model):
-    sender = models.CharField(max_length=150, related_name="sender")
-    receiver = models.CharField(max_length=150, related_name="receiver")
+class Chat(models.Model):
+    sender = models.CharField(max_length=150)
+    receiver = models.CharField(max_length=150)
     body = models.CharField(default="DEFAULT", max_length=255)
     time_sent = models.DateTimeField(auto_now_add=True)
