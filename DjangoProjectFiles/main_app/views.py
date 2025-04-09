@@ -1,43 +1,55 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from .models import User, Chat
+from .models import Chat
 
 # Create your views here.
 
-@login_required
-def chat_page(request, pk):
+# Uncomment once login/register works
+#@login_required
+def chats(request):
 
-    sender = request.user.username
-    receiver = pk
+    sendingUsername = request.user.username
+        
+    chatsSent = Chat.objects.filter(sender=sendingUsername)
+    chatsReceived = Chat.objects.filter(receiver=sendingUsername)
+    
+    chatters = set()
 
-    # validates url pk that user exists
-    if User.objects.get(username=receiver) is None:
-        return redirect('chat_hub')
+    for chatSent in chatsSent:
+        chatters.add(chatSent.receiver)
+
+    for chatReceived in chatsReceived:
+        chatters.add(chatReceived.sender)
 
     if request.method == 'POST':
-        c = Chat(
-            sender=request.POST.get('sender'),
-            receiver=request.POST.get('receiver'),
-            body=request.POST.get('body')
-        )
-        c.save()
+        receivingUsername = request.POST.get('receivingUsername')
         
-    # get chats between users
-    chats = Chat.objects.filter(Q(sender=sender, receiver=receiver) | Q(sender=receiver, receiver=sender))
+        if request.POST.get('action') == 'sending_chat':
+            
+            body = request.POST.get('body')
 
-    # order chats by descending time_sent
-    chats = chats.order_by('-time_sent')
+            if body != '':
+                c = Chat(
+                    sender=sendingUsername,
+                    receiver=receivingUsername,
+                    body=body
+                )
+                c.save()
+            
+
+        chats = chatsSent.filter(receiver=receivingUsername) | chatsReceived.filter(sender=receivingUsername)
+        chats = chats.order_by('-time_sent')
+    else:
+        receivingUsername = None
+        chats = None
 
     context = {
-        'sender': sender,
-        'receiver': receiver,
-        'chats': chats,
+        'sendingUsername':sendingUsername,
+        'chatters':chatters,
+        'receivingUsername':receivingUsername,
+        'chats':chats,
     }
-    return render(request, 'base/chat_room.html', context)
 
-@login_required
-def chat_hub(request):
-
-    return render(request, 'base/chat_hub.html')
+    return render(request, 'base/chats.html', context)
