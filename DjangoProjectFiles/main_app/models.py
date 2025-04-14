@@ -11,6 +11,13 @@ from django.contrib.auth.models import User
 # for title and ISBN there are default values 
 # set up if none we passed in creation.
 #
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     title = models.CharField("DEFAULT TITLE", max_length=250, null=False)
     uploader = models.CharField(max_length=150, null=False)

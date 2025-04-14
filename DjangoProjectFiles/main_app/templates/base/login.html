@@ -54,18 +54,6 @@
         }
     </style>
     <script>
-        function validateLogin(event) {
-            event.preventDefault();
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            
-            if (username === 'username' && password === 'password') {
-                window.location.href = 'dashboard.html';
-            } else {
-                alert('Invalid credentials');
-            }
-        }
-        
         function togglePassword() {
             var passwordField = document.getElementById('password');
             if (passwordField.type === 'password') {
@@ -80,19 +68,26 @@
     <header>
         <h1>LOGO</h1>
         <nav>
-            <a href="home.html">Home</a>
-            <a href="login.html">Login</a>
+            
+            <a href="{% url 'login' %}">Login</a>
         </nav>
     </header>
     
-    <form onsubmit="validateLogin(event)">
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        
         <input type="text" id="username" name="username" placeholder="Username" required><br>
         <input type="password" id="password" name="password" placeholder="Password" required><br>
         <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password<br>
         <button type="submit">Login</button>
+        
         <div class="alternative-login">
             <button type="button" disabled>Login with Google</button>
-            <a href="signup.html">Sign up</a>
+            <a href="{% url 'signup' %}">Sign up</a>
         </div>
     </form>
 </body>
