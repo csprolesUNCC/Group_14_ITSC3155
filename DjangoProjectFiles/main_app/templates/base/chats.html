@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load tz %}
+
+<style>
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+</style>
+
+<div class="container">
+    <div class="sidebar">
+        <h1>Chats</h1>
+        {% if chatters %}
+            {% for chatter in chatters %}
+            <div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="receivingUsername" value="{{chatter}}"">
+                    <button type="submit" name="action" value="view_chat">{{chatter}}</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="main-block">
+        {% if chatters %}
+            {% if receivingUsername %}
+                <h1>Chats with {{receivingUsername}}</h1>
+                <!-- display textbox to send chat -->
+                <div class="send-chat-block">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <textarea name="body"></textarea>
+                        <input type="hidden" name="receivingUsername" value="{{receivingUsername}}">
+                        <button type="submit" name="action" value="sending_chat">Send</button>
+                    </form>
+                </div>
+            
+                <!-- display chats (if any) with recents first -->
+            
+                <!-- for each chat in messages -->
+                <div class="chats-block">
+                    {% if chats %}
+                        {% for chat in chats %}
+                        <div class="chats-chat"> 
+                            From: {{chat.sender}}
+                            {% localtime on %}
+                            <small>{{chat.time_sent}}</small>
+                            {% endlocaltime %}
+                            <p>{{chat.body}}</p>
+                            <br>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div>
+                            <p>There are no previous chats between you and {{receivingUsername}}.<br>Send a message to start a chain.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% if chatters %}
+                    <div>
+                        <h1>Select a username to view their chats.</h1>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <div>
+                <p>You haven't started any chats.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
