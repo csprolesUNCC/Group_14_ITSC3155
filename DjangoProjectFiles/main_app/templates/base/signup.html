@@ -1,106 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+  <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background: #f8f8f8;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    form {
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: #f9f9f9;
+        margin-top: 60px;
+    }
+    .alternative-login {
+        margin-top: 10px;
+    }
+    .alternative-login button {
+        background-color: #db4437;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: not-allowed;
+        width: 100%;
+        margin-top: 5px;
+        opacity: 0.6;
+    }
+    .alternative-login a {
+        display: block;
+        margin-top: 10px;
+        text-decoration: none;
+        color: #007bff;
+    }
+  </style>
+  <script>
+    function togglePassword() {
+        var pw1 = document.getElementById('password');
+        var pw2 = document.getElementById('confirmPassword');
+        if (pw1.type === 'password') {
+            pw1.type = 'text';
+            pw2.type = 'text';
+        } else {
+            pw1.type = 'password';
+            pw2.type = 'password';
         }
-        header {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: #f8f8f8;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        form {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background: #f9f9f9;
-            margin-top: 60px;
-        }
-        .alternative-login {
-            margin-top: 10px;
-        }
-        .alternative-login button {
-            background-color: #db4437;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: not-allowed;
-            width: 100%;
-            margin-top: 5px;
-            opacity: 0.6;
-        }
-        .alternative-login a {
-            display: block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
-    </style>
-    <script>
-        function validateSignUp(event) {
-            event.preventDefault();
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            var confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-            
-            alert('Account created successfully!');
-            window.location.href = 'login.html';
-        }
-
-        function togglePassword() {
-            var passwordField = document.getElementById('password');
-            var confirmPasswordField = document.getElementById('confirmPassword');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                confirmPasswordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-                confirmPasswordField.type = 'password';
-            }
-        }
-    </script>
+    }
+  </script>
 </head>
 <body>
-    <header>
-        <h1>LOGO</h1>
-        <nav>
-            <a href="home.html">Home</a>
-            <a href="login.html">Login</a>
-        </nav>
-    </header>
-    
-    <form onsubmit="validateSignUp(event)">
-        <input type="text" id="username" name="username" placeholder="Username" required><br>
-        <input type="password" id="password" name="password" placeholder="Password" required><br>
-        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required><br>
-        <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password<br>
-        <button type="submit">Sign Up</button>
-        <div class="alternative-login">
-            <button type="button" disabled>Sign up with Google</button>
-            <a href="login.html">Already have an account? Login</a>
-        </div>
-    </form>
+  <header>
+    <h1>LOGO</h1>
+    <nav>
+
+      <a href="{% url 'login' %}">Login</a>
+    </nav>
+  </header>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if error %}
+      <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <input type="text" id="username" name="username" placeholder="Username" required><br>
+    <input type="password" id="password" name="password" placeholder="Password" required><br>
+    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required><br>
+    <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password<br>
+    <button type="submit">Sign Up</button>
+
+    <div class="alternative-login">
+      <button type="button" disabled>Sign up with Google</button>
+      <a href="{% url 'login' %}">Already have an account? Login</a>
+    </div>
+  </form>
 </body>
 </html>
