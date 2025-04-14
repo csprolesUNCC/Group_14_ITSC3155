@@ -1,37 +1,206 @@
-{% extends 'base.html' %}
+{% extends 'main.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Home</h1>
-    
-    <div class="search-bar">
-        <input type="text" placeholder="Search..." />
-        <button>Search</button>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - User's University</title>
+    <!-- Custom CSS for styling -->
+    <style>
+        .main-container {
+            display: flex;
+            width: 100%;
+        }
+        .sidebar {
+            border-right: 1px solid #ddd;
+            min-height: 100vh;
+            padding: 20px;
+            width: 25%;
+        }
+        .item-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .item-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .item-image {
+            background-color: #e0e0e0;
+            height: 150px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+        }
+        .item-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+        .item-name {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .navbar {
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+        .search-bar {
+            width: 50%;
+        }
+        .items-grid {
+            padding: 20px;
+            width: 75%;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .items-grid {
+                width: 100%;
+            }
+            .main-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
 
-    <div class="categories">
-        <h2>Recent in <strong>{{ user.university }}</strong></h2>
-        <div class="item-grid">
-            {% for item in recent_items %}
-            <div class="item-card">
-                <img src="{{ item.image_url }}" alt="{{ item.name }}" />
-                <h3>{{ item.name }}</h3>
-                <p>${{ item.price }}</p>
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h4>Recent</h4>
+            <div class="recent-item">
+                <!-- Placeholder for recent items -->
+                <p>No recent items available.</p>
             </div>
-            {% endfor %}
         </div>
 
-        <h2>Sales in <strong>{{ user.university }}</strong></h2>
-        <div class="item-grid">
-            {% for item in sale_items %}
-            <div class="item-card">
-                <img src="{{ item.image_url }}" alt="{{ item.name }}" />
-                <h3>{{ item.name }}</h3>
-                <p>${{ item.price }}</p>
+        <!-- Main Item Grid with Placeholders -->
+        <div class="items-grid">
+            <div class="grid-container">
+                <!-- Placeholder Item 1 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 2 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 3 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 4 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 5 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 6 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 7 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 8 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 9 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 10 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 11 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
+                <!-- Placeholder Item 12 -->
+                <div class="item-card">
+                    <div class="item-image">
+                        <p>Item's Picture</p>
+                    </div>
+                    <h5 class="item-name">Item's Name</h5>
+                    <p class="item-price">Item's Price</p>
+                </div>
             </div>
-            {% endfor %}
         </div>
     </div>
-</div>
 
+</body>
+</html>
 {% endblock %}

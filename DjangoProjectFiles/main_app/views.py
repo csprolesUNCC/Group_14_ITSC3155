@@ -5,6 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
+# Create your views here.
+
+def home(request):
+    return render(request, 'base/home.html')
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
