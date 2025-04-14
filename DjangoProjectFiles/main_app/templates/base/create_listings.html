@@ -1,0 +1,32 @@
+
+{% extends 'main.html' %}
+{% block content %}
+<div class="form-container">
+    <h2>List a Textbook</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="id_textbook_name">Textbook Name</label>
+        {{ form.textbook_name }}
+
+        <label for="id_college">College</label>
+        {{ form.college }}
+
+        <label for="id_course">Course Code</label>
+        {{ form.course }}
+
+        <label for="id_class_name">Class Name</label>
+        {{ form.class_name }}
+
+        <label for="id_condition">Condition</label>
+        {{ form.condition }}
+
+        <label for="id_teacher">Teacher (optional)</label>
+        {{ form.teacher }}
+
+        <label for="id_image">Image (optional)</label>
+        {{ form.image }}
+
+        <button type="submit" class="btn">Submit Listing</button>
+    </form>
+</div>
+{% endblock %}
