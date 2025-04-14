@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Chat, Product
+from .models import Chat, Listing
 
 # Register your models here.
 admin.site.register(Chat)
-admin.site.register(Product)
+admin.site.register(Listing)

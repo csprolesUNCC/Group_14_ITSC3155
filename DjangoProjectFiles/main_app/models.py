@@ -17,12 +17,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
-class Product(models.Model):
-    title = models.CharField("DEFAULT TITLE", max_length=250, null=False)
-    uploader = models.CharField(max_length=150, null=False)
-    isbn = models.CharField("-------------", max_length=13, null=True)
-    description = models.CharField("DEFAULT DESCRIPTION", max_length=512, null=True)
     
 CONDITION_CHOICES = [
     ('new', 'New'),

@@ -9,6 +9,7 @@ from .models import Chat
 
 # Create your views here.
 
+@login_required(login_url='login')
 def home(request):
     return render(request, 'base/home.html')
 
@@ -20,7 +21,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # Replace with your actual dashboard route name
+            return redirect('home')  # Replace with your actual dashboard route name
         else:
             return render(request, 'base/login.html', {'error': 'Invalid credentials'})
 
@@ -41,12 +42,12 @@ def signup_view(request):
 
         user = User.objects.create_user(username=username, password=password)
         login(request, user)
-        return redirect('dashboard')  # Or change to your actual dashboard route
+        return redirect('home')  # Or change to your actual dashboard route
 
     return render(request, 'base/signup.html')
   
 # Uncomment once login/register works
-#@login_required
+@login_required(login_url='login')
 def chats(request):
 
     sendingUsername = request.user.username
