@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from .models import Chat
+from .models import Chat, Listing
+from .forms import ListingForm
 
 # Create your views here.
 
@@ -104,4 +105,4 @@ def createListing(request):
             listing.seller = request.user
             listing.save()
             return redirect('home')  # or a listing confirmation page
-    return render(request, 'base/create_listing.html', {'form': form})
+    return render(request, 'base/create_listings.html', {'form': form})
