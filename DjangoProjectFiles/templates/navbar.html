@@ -1,4 +1,4 @@
-<!-- <a href="/">
+<a href="/">
     <h1>LOGO</h1>
 </a>
 
@@ -6,98 +6,12 @@
     <input type="text" name="q" placeholder="Search BookBarter..."></input>
 </form>
 
+
 <a>login</a>
 
-<hr> -->
+<hr>
 
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - User's University</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS for additional styling -->
-    <style>
-        .sidebar {
-            border-right: 1px solid #ddd;
-            height: 100vh;
-            padding: 20px;
-        }
-        .item-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-        }
-        .item-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .item-image {
-            background-color: #e0e0e0;
-            height: 150px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-        }
-        .item-image img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: cover;
-        }
-        .item-name {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        .item-price {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .navbar {
-            background-color: #f8f9fa;
-            padding: 10px;
-        }
-        .search-bar {
-            width: 50%;
-        }
-        .items-grid {
-            padding: 20px;
-        }
-    </style>
-</head>
 
-<body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="container-fluid">
-            <!-- Logo (replaced with text) -->
-            <a class="navbar-brand" href="{% url 'home' %}">
-                User's University
-            </a>
-            <!-- Search Bar -->
-            <form class="d-flex mx-auto search-bar" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search by Title, Author, ISBN, or University" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-            <!-- Messaging and Profile Icons -->
-            <div class="d-flex">
-                <a href="{% url 'chats' %}" class="btn btn-outline-primary me-2">
-                    <i class="bi bi-cart"></i> Chat
-                </a>
-                <a href="{% url 'profile' %}" class="btn btn-outline-primary">
-                    <i class="bi bi-person-circle"></i> Profile
-                </a>
-            </div>
-        </div>
-    </nav>
-</body>
-</html>
-{% endblock %}
+
+<hr>
 

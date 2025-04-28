@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -7,7 +7,9 @@ from django.db.models import Q
 
 from .models import Chat, Listing
 from .forms import ListingForm
-from django.shortcuts import get_object_or_404
+
+
+
 
 # Create your views here.
 
@@ -114,6 +116,7 @@ def createListing(request):
     return render(request, 'base/create_listings.html', {'form': form})
 
 
+
 @login_required
 def profile(request):
     user_listings = Listing.objects.filter(seller=request.user).order_by('-created')
@@ -163,20 +166,4 @@ def edit_listing(request, item_id):
 
 
 
-@login_required
-def edit_listing(request, pk):
-    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
 
-    if request.method == 'POST':
-        listing.textbook_name = request.POST.get('textbook_name')
-        listing.course = request.POST.get('course')
-        listing.condition = request.POST.get('condition')
-        
-        # Handle image upload if a new image is provided
-        if 'image' in request.FILES:
-            listing.image = request.FILES['image']
-        
-        listing.save()
-        return redirect('profile')  # Redirect to the profile or wherever appropriate
-
-    return render(request, 'edit_listing.html', {'listing': listing})
