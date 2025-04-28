@@ -36,6 +36,8 @@ class Listing(models.Model):
     teacher = models.CharField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to='listing_images/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    
 
     def __str__(self):
         return self.textbook_name
@@ -45,3 +47,13 @@ class Chat(models.Model):
     receiver = models.CharField(max_length=150)
     body = models.CharField(default="DEFAULT", max_length=255)
     time_sent = models.DateTimeField(auto_now_add=True)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    university = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"

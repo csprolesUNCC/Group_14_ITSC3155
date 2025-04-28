@@ -1,0 +1,252 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - User's University</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .profile-header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        .listings {
+            margin-top: 20px;
+        }
+        .listings h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .item-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .item-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .item-card a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .item-card a:hover {
+            text-decoration: underline;
+        }
+        .actions {
+            margin: 20px 0;
+        }
+        .actions a {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .actions a:hover {
+            background-color: #2980b9;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-content label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="profile-header">
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+        {% else %}
+            <img src="https://via.placeholder.com/100" alt="Default Profile Picture">
+        {% endif %}
+        <div>
+            <h1>{{ user.username }}'s Profile</h1>
+            <p>University: {{ user.university }}</p>
+            {% if user.bio %}
+                <p>Bio: {{ user.bio }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="{% url 'create-listing' %}">Add New Listing</a>
+        <a href="{% url 'chats' %}">View Messages</a>
+        <a href="{% url 'login' %}">Log Out</a>
+    </div>
+
+    <div class="listings">
+        <h2>Your Textbooks for Sale</h2>
+        {% if user_listings %}
+            <div class="item-grid">
+                {% for item in user_listings %}
+                    <div class="item-card">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.textbook_name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150" alt="No Image">
+                        {% endif %}
+                        <h3><a href="{% url 'product' item.id %}">{{ item.textbook_name }}</a></h3>
+                        <p>Course: {{ item.course }}</p>
+                        <p>Condition: {{ item.condition }}</p>
+
+                        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+    <button class="btn-secondary" onclick="openEditModal('{{ item.id }}', '{{ item.textbook_name }}', '{{ item.course }}', '{{ item.condition }}')">Edit</button>
+
+    <form method="POST" action="{% url 'delete_listing' item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You have no textbooks listed for sale.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Edit Listing</h2>
+        <form id="editForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" id="editItemId">
+            <label>Title:</label>
+            <input type="text" name="textbook_name" id="editTitle" required><br>
+            <label>Course:</label>
+            <input type="text" name="course" id="editCourse" required><br>
+            <label>Condition:</label>
+            <input type="text" name="condition" id="editCondition" required><br>
+            <label>Image (optional):</label>
+            <input type="file" name="image"><br><br>
+            <button type="submit" class="btn-secondary">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditModal(id, title, course, condition) {
+        document.getElementById('editModal').style.display = 'block';
+        document.getElementById('editItemId').value = id;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editCourse').value = course;
+        document.getElementById('editCondition').value = condition;
+        document.getElementById('editForm').action = `/edit-listing/${id}/`;
+    }
+
+    function closeModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        let modal = document.getElementById('editModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
+
+</body>
+</html>
+{% endblock %}
