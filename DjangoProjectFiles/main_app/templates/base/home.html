@@ -26,6 +26,7 @@
             text-align: center;
             margin-bottom: 20px;
             transition: transform 0.2s;
+            cursor: pointer;
         }
         .item-card:hover {
             transform: scale(1.05);
@@ -86,6 +87,7 @@
     </style>
 </head>
 <body>
+    
 
     <!-- Main Content -->
     <div class="main-container">
@@ -93,110 +95,36 @@
         <div class="sidebar">
             <h4>Recent</h4>
             <div class="recent-item">
-                <!-- Placeholder for recent items -->
-                <p>No recent items available.</p>
+                {% if recent_items %}
+                    {% for item in recent_items %}
+                        <div class="recent-item">
+                            <p>{{ item.name }} - {{ item.price }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No recent items available.</p>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Main Item Grid with Placeholders -->
+        <!-- Main Item Grid -->
         <div class="items-grid">
             <div class="grid-container">
-                <!-- Placeholder Item 1 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
+                {% for item in items %} 
+                    <div class="item-card" onclick="window.location.href='/item/{{ item.id }}'">
+                        <div class="item-image">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.textbook_name }}">
+                            {% else %}
+                                <p>No image</p>
+                            {% endif %}
+                        </div>
+                        <h5 class="item-name">{{ item.textbook_name }}</h5>
+                        <p class="item-price">{{ item.college }} - {{ item.course }}</p>
                     </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 2 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 3 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 4 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 5 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 6 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 7 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 8 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 9 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 10 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 11 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
-                <!-- Placeholder Item 12 -->
-                <div class="item-card">
-                    <div class="item-image">
-                        <p>Item's Picture</p>
-                    </div>
-                    <h5 class="item-name">Item's Name</h5>
-                    <p class="item-price">Item's Price</p>
-                </div>
+                {% empty %}
+                    <p>No items available.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
