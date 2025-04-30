@@ -9,8 +9,50 @@
     grid-template-columns: 1fr 4fr;
 }
 
+.main-block {
+    padding: 10px;
+}
+
 .sidebar {
-    padding: 5px;
+    padding: 5px 10px;
+}
+
+.find-usr {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.find-usr input, button {
+    height: 25px;
+}
+
+.select-usr button {
+    width: 100%;                 /* Makes the button take up 100% of its parent container */
+    padding: 5px;                /* Adds 5px padding on all sides */
+    text-align: center;          /* Centers the text horizontally */
+    display: inline-block;       /* Ensures the button behaves like a block-level element */   
+}
+
+.select-usr {
+    padding-top: 2px;
+}
+
+.container button {
+    cursor: pointer;
+}
+
+.container h1 {
+    text-align: center;
+}
+
+.chat {
+    padding-top: 10px;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
 }
 
 </style>
@@ -20,31 +62,53 @@
     <div class="sidebar">
       
         <h1>Chats</h1>
-        <hr>
 
-        <!-- For each person the user has chatted with -->
-        <div class="usr-select">
-            <form method="GET" action="">
-                <input name="usr" type="button" value="USER 1">
-            </form>    
-        </div>
-        <!-- End For -->
+        <form method="GET" action="" class="find-usr">
+            <input name="usr" type="text" placeholder="Start a chat with...">
+        </form>
 
-        <hr>
+        {% for username in chatterUsernames %}
 
-        <div class="find-usr">
-            <form method="GET" action="">
-                <input name="usr" type="text" placeholder="Start a chat with...">
-                <button type="submit">></button>
+            <form method="GET" action="" class="select-usr">
+                <button type="submit" name="usr" value="{{username}}">{{username}}</button>
             </form>
-        </div>
 
+        {% endfor %}
 
     </div>
     
     <div class="main-block">
         
-        <p>Random Text Blah Blah</p>
+        {% if userSelected %}
+
+            <h1>{{receiver}}</h1>
+
+            <form action="" method="POST" class="find-usr">
+                {% csrf_token %}
+                <input type="text" name="msg" placeholder="Send a message...">
+            </form>
+
+            {% for chat in chats %}
+
+                {% if chat.sender == receiver or chat.receiver == receiver %}
+
+                    <div class="chat">
+                        <div class="chat-header">
+                            <a><strong>From: {{chat.sender}}</strong></a>
+                            <small>Sent on {{chat.time_sent}}</small>
+                        </div>
+                        <a>{{chat.body}}</a>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% else %}
+
+            <h1>Select or Start a Chat With Someone!</h1>
+
+        {% endif %}
 
     </div>
 

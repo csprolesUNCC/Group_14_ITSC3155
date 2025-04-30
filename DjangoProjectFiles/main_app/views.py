@@ -8,9 +8,6 @@ from django.db.models import Q
 from .models import Chat, Listing
 from .forms import ListingForm
 
-
-
-
 # Create your views here.
 
 @login_required(login_url='login')
@@ -59,46 +56,42 @@ def signup_view(request):
 @login_required(login_url='login')
 def chats(request):
 
-    sendingUsername = request.user.username
-        
-    chatsSent = Chat.objects.filter(sender=sendingUsername)
-    chatsReceived = Chat.objects.filter(receiver=sendingUsername)
+    sender = request.user.username
+    receiver = request.GET.get("usr")
+    userSelected = False
+
+    if User.objects.filter(username=receiver).exists() and sender != receiver:    
+        userSelected = True
     
-    chatters = set()
+    if request.method == "POST":
+        messageBody = request.POST.get("msg")
 
-    for chatSent in chatsSent:
-        chatters.add(chatSent.receiver)
+        if messageBody is not None and messageBody != '':
+            C = Chat(
+                sender=sender,
+                receiver=receiver,
+                body=messageBody
+            )
+            C.save()
 
-    for chatReceived in chatsReceived:
-        chatters.add(chatReceived.sender)
+    chats = Chat.objects.filter(Q(sender=sender) | Q(receiver=sender))
 
-    if request.method == 'POST':
-        receivingUsername = request.POST.get('receivingUsername')
-        
-        if request.POST.get('action') == 'sending_chat':
-            
-            body = request.POST.get('body')
+    chatterUsernames = {sender}
 
-            if body != '':
-                c = Chat(
-                    sender=sendingUsername,
-                    receiver=receivingUsername,
-                    body=body
-                )
-                c.save()
-            
+    for chat in chats:
+        chatterUsernames.add(chat.sender)
+        chatterUsernames.add(chat.receiver)
 
-        chats = chatsSent.filter(receiver=receivingUsername) | chatsReceived.filter(sender=receivingUsername)
-        chats = chats.order_by('-time_sent')
-    else:
-        receivingUsername = None
-        chats = None
+    chatterUsernames.remove(sender)
+
+    currentChats = chats.filter(Q(sender=sender, receiver=receiver)|Q(sender=receiver, receiver=sender)).order_by('-time_sent')
 
     context = {
-        'sendingUsername':sendingUsername,
-        'chatters':chatters,
-        'receivingUsername':receivingUsername,
-        'chats':chats,
+        "userSelected" : userSelected,
+        "sender": sender,
+        "receiver" : receiver,
+        "chatterUsernames" : chatterUsernames,
+        "chats" : currentChats,
     }
 
     return render(request, 'base/chats.html', context)
