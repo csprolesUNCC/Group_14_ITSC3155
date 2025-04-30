@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 
 {% block content %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,23 +69,28 @@
     <div class="product-main">
 
         <div class="images">
-            <img src="{{ image1_url }}" alt="Book Image 1">
-            <img src="{{ image2_url }}" alt="Book Image 2">
+            <!-- addtional images -->
         </div>
 
         <div class="item-picture">
-            <img src="{{ main_image_url }}" alt="Main Book Image">
+            {% if object.image %}
+                
+                    <img src="{{ object.image.url }}" alt="Image">
+
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
         </div>
 
         <div class="product-info">
-            <h1>{{ title }}</h1>
-            <p><strong>College:</strong> {{ college }}</p>
-            <p><strong>Course:</strong> {{ course }}</p>
-            <p><strong>Condition:</strong> {{ condition }}</p>
-            <p><strong>Price:</strong> ${{ price }}</p>
+            <h1>{{ item.textbook_name }}</h1>
+            <p><strong>College:</strong> {{ item.college }}</p>
+            <p><strong>Course:</strong> {{ item.course }}</p>
+            <p><strong>Condition:</strong> {{ item.condition }}</p>
+            <p><strong>Price:</strong> ${{ item.price }}</p>
 
             <div class="buttons">
-                <button type="button">Message me about this item!</button>
+                <a href="{% url 'chats' %}" class="btn btn-primary">Message me about this item!</a>
                 
             </div>
         </div>
