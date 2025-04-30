@@ -1,3 +1,6 @@
+{% extends 'main.html' %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,12 +67,12 @@
     <div class="product-main">
 
         <div class="images">
-            <img src="{% image1_url %}" alt="Book Image 1">
-            <img src="{% image2_url %}" alt="Book Image 2">
+            <img src="{{ image1_url }}" alt="Book Image 1">
+            <img src="{{ image2_url }}" alt="Book Image 2">
         </div>
 
         <div class="item-picture">
-            <img src="{% main_image_url %}" alt="Main Book Image">
+            <img src="{{ main_image_url }}" alt="Main Book Image">
         </div>
 
         <div class="product-info">
@@ -80,8 +83,8 @@
             <p><strong>Price:</strong> ${{ price }}</p>
 
             <div class="buttons">
-                <button type="button">Bid</button>
-                <button type="button">Checkout</button>
+                <button type="button">Message me about this item!</button>
+                
             </div>
         </div>
 
@@ -96,3 +99,5 @@
 
 </body>
 </html>
+
+{% endblock %}
