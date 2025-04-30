@@ -1,3 +1,7 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,8 +84,8 @@
             <p><strong>Price:</strong> ${{ price }}</p>
 
             <div class="buttons">
-                <button type="button">Bid</button>
-                <button type="button">Checkout</button>
+                <button type="button">Message me about this item!</button>
+                
             </div>
         </div>
 
@@ -96,3 +100,5 @@
 
 </body>
 </html>
+
+{% endblock %}
