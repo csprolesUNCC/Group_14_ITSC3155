@@ -4,56 +4,48 @@
 
 <style>
 
-.container {
-    display: grid;
-    grid-template-columns: 1fr 4fr;
-}
+    .container {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+    }
 
-.main-block {
-    padding: 10px;
-}
+    .find-usr {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
 
-.sidebar {
-    padding: 5px 10px;
-}
+    .find-usr input, button {
+        height: 25px;
+    }
 
-.find-usr {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-}
+    .select-usr button {
+        width: 100%;                 /* Makes the button take up 100% of its parent container */
+        padding: 5px;                /* Adds 5px padding on all sides */
+        text-align: center;          /* Centers the text horizontally */
+        display: inline-block;       /* Ensures the button behaves like a block-level element */   
+    }
 
-.find-usr input, button {
-    height: 25px;
-}
+    .select-usr {
+        padding-top: 2px;
+    }
 
-.select-usr button {
-    width: 100%;                 /* Makes the button take up 100% of its parent container */
-    padding: 5px;                /* Adds 5px padding on all sides */
-    text-align: center;          /* Centers the text horizontally */
-    display: inline-block;       /* Ensures the button behaves like a block-level element */   
-}
+    .container button {
+        cursor: pointer;
+    }
 
-.select-usr {
-    padding-top: 2px;
-}
+    .container h1 {
+        text-align: center;
+    }
 
-.container button {
-    cursor: pointer;
-}
+    .chat {
+        padding-top: 10px;
+    }
 
-.container h1 {
-    text-align: center;
-}
-
-.chat {
-    padding-top: 10px;
-}
-
-.chat-header {
-    display: flex;
-    justify-content: space-between;
-}
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+    }
 
 </style>
 
