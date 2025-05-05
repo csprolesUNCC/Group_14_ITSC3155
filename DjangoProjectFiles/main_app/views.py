@@ -159,5 +159,16 @@ def edit_listing(request, item_id):
 
 @login_required
 def search_page(request):
-    return render(request, 'base/search.html')
+
+    searchQuery = request.GET.get('search');
+
+    if searchQuery is None or searchQuery is '':
+        return redirect('home')
+    
+
+    context = {
+        'searchQuery' : searchQuery,
+    }
+
+    return render(request, 'base/search.html', context)
 
