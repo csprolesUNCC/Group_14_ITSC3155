@@ -165,10 +165,20 @@ def search_page(request):
     if searchQuery is None or searchQuery is '':
         return redirect('home')
     
+    results = set(
+        Listing.objects.filter(
+            Q(textbook_name=searchQuery) 
+            | Q(college=searchQuery) 
+            | Q(course=searchQuery) 
+            | Q(class_name=searchQuery) 
+            | Q(teacher=searchQuery)
+            #| Q(isbn=searchQuery)
+        )
+    )
 
     context = {
         'searchQuery' : searchQuery,
+        'results' : results
     }
 
     return render(request, 'base/search.html', context)
-

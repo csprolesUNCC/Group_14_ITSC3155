@@ -34,6 +34,12 @@
 
         <h3>results for "{{searchQuery}}"</h3>
 
+        {% for result in results %}
+
+        <a>{{result.textbook_name}}</a>
+
+        {% endfor %}
+
     </div>
 
 </div>
