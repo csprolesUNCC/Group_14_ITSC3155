@@ -167,12 +167,12 @@ def search_page(request):
     
     results = set(
         Listing.objects.filter(
-            Q(textbook_name=searchQuery) 
-            | Q(college=searchQuery) 
-            | Q(course=searchQuery) 
-            | Q(class_name=searchQuery) 
-            | Q(teacher=searchQuery)
-            | Q(isbn=searchQuery)
+            Q(textbook_name__iconatins=searchQuery) 
+            | Q(college__iconatins=searchQuery) 
+            | Q(course__iconatins=searchQuery) 
+            | Q(class_name__iconatins=searchQuery) 
+            | Q(teacher__iconatins=searchQuery)
+            | Q(isbn__iconatins=searchQuery)
         )
     )
 
