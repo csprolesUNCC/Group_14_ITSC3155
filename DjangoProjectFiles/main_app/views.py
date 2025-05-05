@@ -52,7 +52,6 @@ def signup_view(request):
 
     return render(request, 'base/signup.html')
   
-# Uncomment once login/register works
 @login_required(login_url='login')
 def chats(request):
 
@@ -158,5 +157,7 @@ def edit_listing(request, item_id):
     return render(request, 'base/edit_listing.html', {'form': form, 'item': item})
 
 
-
+@login_required
+def search_page(request):
+    return render(request, 'base/search.html')
 

@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+
+.search-container {
+
+    display: grid;
+    grid-template-columns: 300px, 1fr;
+
+}
+
+</style>
+
+<div class="search-container">
+
+    <div class="filter-sidebar">
+
+        <h1>Filters</h1>
+
+    </div>
+
+    <div class="serach-results">
+
+        <h1>results for "{{searchQuery}}"</h1>
+
+    </div>
+
+</div>
+
+{% end block %}

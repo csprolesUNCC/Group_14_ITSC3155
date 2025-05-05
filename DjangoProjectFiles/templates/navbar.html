@@ -70,8 +70,8 @@
                 User's University
             </a>
             <!-- Search Bar -->
-            <form class="d-flex mx-auto search-bar" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search by Title, Author, ISBN, or University" aria-label="Search">
+            <form class="d-flex mx-auto search-bar" role="search" action="{% url 'search' %}" method="GET">
+                <input class="form-control me-2" type="search" placeholder="Search by Title, Author, ISBN, or University" aria-label="Search" name="search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <!-- Messaging and Profile Icons -->
