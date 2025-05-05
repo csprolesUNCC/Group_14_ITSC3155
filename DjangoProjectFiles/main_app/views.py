@@ -172,7 +172,7 @@ def search_page(request):
             | Q(course=searchQuery) 
             | Q(class_name=searchQuery) 
             | Q(teacher=searchQuery)
-            #| Q(isbn=searchQuery)
+            | Q(isbn=searchQuery)
         )
     )
 
