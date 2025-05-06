@@ -34,11 +34,28 @@
     }
 
     .result {
+        display: grid;
+        grid-template-columns: 75px 1fr;
+        gap: 10px;
         padding: 2px;
+        margin: 2px;
+    }
+
+    .result img {
+        width: auto;
+        height: 75px;
     }
 
     .full-width {
         width: 100%;
+    }
+
+    .clickable-box {
+        cursor: pointer;
+        /* Optional styling */
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
     }
 
 </style>
@@ -94,9 +111,24 @@
 
         {% for result in results %}
 
-            <div class="result">
-                <a>{{result.textbook_name}}</a>
-            </div>
+            <a href="{% url 'product' result.id %}" style="text-decoration: none; color: inherit;">
+
+                <div class="result clickable-box">
+                
+                    {% if result.image %}
+                        <img src="{{ result.image.url }}" alt="{{ result.textbook_name }}">
+                    {% else %}
+                        <label>No Image</label>
+                    {% endif %}
+    
+                    <div>
+                        <label>{{result.textbook_name}}</label><br>
+                        <label>${{result.price}}</label>
+                    </div>
+    
+                </div>
+
+            </a>
 
         {% empty %}
 
