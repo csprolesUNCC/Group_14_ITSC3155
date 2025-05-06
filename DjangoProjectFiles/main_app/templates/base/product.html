@@ -2,6 +2,7 @@
 
 {% block content %}
 {% load static %}
+{% get_media_prefix as MEDIA_URL %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -161,9 +162,10 @@
 
         <div class="item-picture">
 
-            {% if object.image %}
+            {% if item.image %}
+
                 
-                    <img src="{{ object.image.url }}" alt="Image">
+                <img src="{{ MEDIA_URL }}{{ item.image }}" alt="Image">
 
             {% else %}
                 <p>No image available</p>
@@ -185,8 +187,6 @@
 
             </div>
         </div>
-        <h3>Book Details</h3>
-        <p>{{ book_details }}</p>
 
 </div>
 
