@@ -182,7 +182,7 @@
 
             <div class="buttons">
 
-                <a href="{% url 'chats' %}" class="btn btn-primary">Message me about this item!</a>
+                <a href="{% url 'chats' %}?usr={{item.seller.username}}" class="btn btn-primary">Message me about this item!</a>
                 
 
             </div>
