@@ -156,6 +156,12 @@ def edit_listing(request, item_id):
 @login_required(login_url='login')
 def search_page(request):
 
+    # 
+    # Filter all object first by filters
+    # 
+    # The check the search query in that subset
+    # 
+
     usingFilters = request.GET.get('filtered')
 
     searchQuery = request.GET.get('search')
