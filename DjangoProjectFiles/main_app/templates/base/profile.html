@@ -289,6 +289,7 @@
                         <h3><a href="{% url 'product' item.id %}">{{ item.textbook_name }}</a></h3>
                         <p>Course: {{ item.course }}</p>
                         <p>Condition: {{ item.condition }}</p>
+                        <p>Price: ${{ item.price }}</p>
                         <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                             <button class="btn-secondary" onclick="openEditModal('{{ item.id }}', '{{ item.textbook_name }}', '{{ item.course }}', '{{ item.condition }}')">Edit</button>
                             <form method="POST" action="{% url 'delete_listing' item.id %}">
@@ -319,6 +320,8 @@
             <input type="text" name="course" id="editCourse" required><br>
             <label>Condition:</label>
             <input type="text" name="condition" id="editCondition" required><br>
+            <label>Price:</label>
+            <input type="text" name="price" id="editPrice" required><br>
             <label>Image (optional):</label>
             <input type="file" name="image"><br><br>
             <button type="submit" class="btn-secondary">Save Changes</button>

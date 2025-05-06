@@ -245,13 +245,13 @@ def edit_listing(request, pk):
         listing.textbook_name = request.POST.get('textbook_name')
         listing.course = request.POST.get('course')
         listing.condition = request.POST.get('condition')
+        listing.price = request.POST.get('price')  # <-- Add this line to update the price
         
-        # Handle image upload if a new image is provided
         if 'image' in request.FILES:
             listing.image = request.FILES['image']
         
         listing.save()
-        return redirect('profile')  # Redirect to the profile or wherever appropriate
+        return redirect('profile')
 
     return render(request, 'edit_listing.html', {'listing': listing})
 

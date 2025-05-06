@@ -50,8 +50,12 @@
             font-size: 1.1rem;
             margin-bottom: 5px;
         }
-        .item-price {
+        .item-course {
             color: #28a745;
+            font-weight: bold;
+        }
+        .item-price {
+            color: #000000;
             font-weight: bold;
         }
         .navbar {
@@ -217,7 +221,8 @@
                             {% endif %}
                         </div>
                         <h5 class="item-name">{{ item.textbook_name }}</h5>
-                        <p class="item-price">{{ item.college }} - {{ item.course }}</p>
+                        <p class="item-course">{{ item.college }} - {{ item.course }}</p>
+                        <p class="item-price">${{ item.price }}</p>
                     </div>
                 {% empty %}
                     <p>No items available.</p>
