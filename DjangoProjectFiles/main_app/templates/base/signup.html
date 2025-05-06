@@ -1,9 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up</title>
+  <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
         font-family: Arial, sans-serif;
@@ -24,7 +28,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 30px;
+        padding: 10px 40px;
         background: white;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         font-size: 18px;
@@ -69,17 +73,18 @@
     form button[type="submit"] {
         width: 100%;
         padding: 12px;
-        background-color: #3665f3;
+        background-color: #0066cc;
         color: white;
         font-size: 16px;
         border: none;
         border-radius: 6px;
         cursor: pointer;
         margin-top: 20px;
+		transition: background-color 0.2s ease-in-out;
     }
 
     form button[type="submit"]:hover {
-        background-color: #214dc9;
+        background-color: #004f99;
     }
 
     .alternative-login {
@@ -116,6 +121,19 @@
         font-size: 14px;
         margin-bottom: 10px;
     }
+	
+	.navbar {
+        background-color: #f8f9fa;
+		padding: 10px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1000;
+    }
+    .navbar-brand {
+        width: 50px;
+    }
   </style>
   <script>
     function togglePassword() {
@@ -127,12 +145,21 @@
   </script>
 </head>
 <body>
-  <header>
-    <h1>LOGO</h1>
-    <nav>
-      <a href="{% url 'login' %}">Login</a>
+  <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <!-- Logo (replaced with text) -->
+            <a href="{% url 'home' %}">
+                <img src="{% static 'Your_paragraph_text_2.png' %}" class="navbar-brand">
+            </a>
+            <!-- Sign Up Link -->
+            <div class="d-flex">
+                <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-cart"></i> Login
+                </a>
+            </div>
+        </div>
     </nav>
-  </header>
 
   <form method="POST">
     {% csrf_token %}
