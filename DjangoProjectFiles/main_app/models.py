@@ -37,6 +37,7 @@ class Listing(models.Model):
     image = models.ImageField(upload_to='listing_images/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    views = models.IntegerField(default=0)
     
 
     def __str__(self):
@@ -57,3 +58,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+
+class ViewHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        verbose_name_plural = 'View Histories'
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.listing.textbook_name}"
