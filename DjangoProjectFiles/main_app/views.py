@@ -238,9 +238,8 @@ def delete_listing(request, item_id):
         return redirect('profile')  # Optionally, you can redirect to an error page
     
 @login_required(login_url='login')
-def edit_listing(request, item_id):
-    # Get the item or return a 404 if it doesn't exist
-    item = get_object_or_404(Listing, id=item_id)
+def edit_listing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
 
     if request.method == 'POST':
         listing.textbook_name = request.POST.get('textbook_name')
@@ -255,6 +254,8 @@ def edit_listing(request, item_id):
         return redirect('profile')  # Redirect to the profile or wherever appropriate
 
     return render(request, 'edit_listing.html', {'listing': listing})
+
+
 
 @login_required(login_url='login')
 def search_page(request):
