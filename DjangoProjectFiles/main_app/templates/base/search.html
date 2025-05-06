@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+
+    .search-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        margin: 10px;
+    }
+
+    .filter-sidebar {
+        margin: 10px;
+    }
+
+    .filter-sidebar-header {
+        text-align: center;
+        font-size: 24px; 
+        text-decoration: underline;
+    }
+
+    .filter {
+        padding: 2px;
+    }
+
+    .filter-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .search-results {
+        margin: 10px;
+    }
+
+    .result {
+        padding: 2px;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+</style>
+
+<div class="search-container">
+
+    <div class="filter-sidebar">
+
+        <div class="filter-sidebar-header">
+            <b>Filters</b>
+        </div>
+
+        <form action="" method="GET">
+
+            <input type="hidden" name="search" value="{{request.GET.search}}">
+            
+            <div class="filter">
+                <label>Minimum Price:</label>
+                <input class="full-width" type="number" name="min_price" value="{% if request.GET.min_price %}{{request.GET.min_price}}{% endif %}" step="0.01">
+            </div>
+            
+            <div class="filter">
+                <label>Maximum Price:</label>
+                <input class="full-width" type="number" name="max_price" value="{% if request.GET.max_price %}{{request.GET.max_price}}{% endif %}" step="0.01">
+            </div>
+
+            <div class="filter">
+                <label>Condition:</label><br>
+
+                {% for cond, label in conditions.items %}
+
+                    <label>
+                        <input type="checkbox" name="cond" value="{{cond}}" {% if cond in selectedConds %}checked{% endif %}>
+                        {{label}}
+                    </label><br>
+
+                {% endfor %}
+            </div>
+
+            <div class="filter filter-buttons full-width">
+                <button type="submit">Apply</button>
+                <button type="submit" name="clear" value="">Clear</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="serach-results">
+
+        <h3>Results for "{{request.GET.search}}"</h3>
+        <br>
+
+        {% for result in results %}
+
+            <div class="result">
+                <a>{{result.textbook_name}}</a>
+            </div>
+
+        {% empty %}
+
+            <a>No results found!</a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
