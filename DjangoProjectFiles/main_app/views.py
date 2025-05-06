@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.decorators.cache import never_cache
+from django.urls import reverse
 
 from .models import Chat, Listing, ViewHistory
 from .forms import ListingForm
@@ -80,7 +81,6 @@ def signup_view(request):
 
     return render(request, 'base/signup.html')
   
-# Uncomment once login/register works
 @login_required(login_url='login')
 def chats(request):
 
@@ -138,13 +138,12 @@ def createListing(request):
 
 
 
-@login_required
+@login_required(login_url='login')
 def profile(request):
     user_listings = Listing.objects.filter(seller=request.user).order_by('-created')
     return render(request, 'base/profile.html', {'user_listings': user_listings})
 
-
-@login_required
+@login_required(login_url='login')
 def product(request, item_id):
     item = get_object_or_404(Listing, id=item_id)
     
@@ -165,9 +164,7 @@ def product(request, item_id):
     
     return render(request, 'base/product.html', {'item': item})
 
-
-
-@login_required
+@login_required(login_url='login')
 def delete_listing(request, item_id):
     # Get the item or return a 404 if it doesn't exist
     item = get_object_or_404(Listing, id=item_id)
@@ -180,12 +177,10 @@ def delete_listing(request, item_id):
         # If the user is not the seller, deny the deletion
         return redirect('profile')  # Optionally, you can redirect to an error page
     
-
-
-
-@login_required
-def edit_listing(request, pk):
-    listing = get_object_or_404(Listing, pk=pk, seller=request.user)
+@login_required(login_url='login')
+def edit_listing(request, item_id):
+    # Get the item or return a 404 if it doesn't exist
+    item = get_object_or_404(Listing, id=item_id)
 
     if request.method == 'POST':
         listing.textbook_name = request.POST.get('textbook_name')
@@ -201,5 +196,60 @@ def edit_listing(request, pk):
 
     return render(request, 'edit_listing.html', {'listing': listing})
 
+@login_required(login_url='login')
+def search_page(request):
+
+    conditions = {
+        'new':'New',
+        'like_new':'Like New',
+        'good':'Good',
+        'acceptable':'Acceptable',
+        'poor':'Poor'
+    }
+
+    selectedConds = request.GET.getlist('cond')
+
+    search = request.GET.get('search')
+
+    if not search or search == '':
+        return redirect('home')
+
+    if request.GET.get('clear') is not None:
+        cleanedURL = reverse('search') + '?search=' + request.GET.get('search')
+        return redirect(cleanedURL)
+
+    results = Listing.objects.all()
+
+    if request.GET.get('min_price') and request.GET.get('min_price') != '':
+        results = results.filter(price__gte=request.GET.get('min_price'))
+
+    if request.GET.get('max_price') and request.GET.get('max_price') != '':
+        results = results.filter(price__lte=request.GET.get('max_price'))
+
+    if request.GET.get('cond'):
+        condQ = Q()
+
+        for cond in selectedConds:
+            condQ |= Q(condition=cond)
+
+        results = results.filter(condQ)
 
 
+    results = results.filter(
+        Q(textbook_name__icontains=search)
+        | Q(college__icontains=search)
+        | Q(course__icontains=search)
+        | Q(class_name__icontains=search)
+        | Q(teacher__icontains=search)
+        | Q(isbn__icontains=search)
+    )
+
+    results = results.distinct()
+
+    context = {
+        "results" : results,
+        "conditions" : conditions,
+        "selectedConds" : selectedConds,
+    }
+
+    return render(request, 'base/search.html', context)
