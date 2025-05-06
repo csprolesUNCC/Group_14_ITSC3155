@@ -70,6 +70,93 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+        }
+
+        .sidebar h4 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .recent-items-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .recent-item {
+            margin-bottom: 15px;
+        }
+
+        .recent-item-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.2s;
+        }
+
+        .recent-item-link:hover {
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+
+        .recent-item-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .recent-item-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #dee2e6;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .recent-item-details {
+            flex: 1;
+        }
+
+        .recent-item-title {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+            color: #007bff;
+        }
+
+        .recent-item-subtitle {
+            font-size: 0.9rem;
+            margin: 2px 0;
+            color: #6c757d;
+        }
+
+        .recent-item-seller {
+            font-size: 0.8rem;
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .no-items {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 10px 0;
+        }
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -91,20 +178,30 @@
 
     <!-- Main Content -->
     <div class="main-container">
-        <!-- Sidebar -->
         <div class="sidebar">
-            <h4>Recent</h4>
-            <div class="recent-item">
-                {% if recent_items %}
+            <h4>Recently Viewed</h4>
+            {% if recent_items %}
+                <ul class="recent-items-list">
                     {% for item in recent_items %}
-                        <div class="recent-item">
-                            <p>{{ item.name }} - {{ item.price }}</p>
-                        </div>
+                        <li class="recent-item">
+                            <a href="{% url 'product' item.id %}" class="recent-item-link">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.textbook_name }}" class="recent-item-image">
+                                {% else %}
+                                    <div class="recent-item-placeholder">No Image</div>
+                                {% endif %}
+                                <div class="recent-item-details">
+                                    <h5 class="recent-item-title">{{ item.textbook_name }}</h5>
+                                    <p class="recent-item-subtitle">{{ item.college }}</p>
+                                    <p class="recent-item-seller">Seller: {{ item.seller.username }}</p>
+                                </div>
+                            </a>
+                        </li>
                     {% endfor %}
-                {% else %}
-                    <p>No recent items available.</p>
-                {% endif %}
-            </div>
+                </ul>
+            {% else %}
+                <p class="no-items">No listings viewed yet.</p>
+            {% endif %}
         </div>
 
         <!-- Main Item Grid -->

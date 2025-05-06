@@ -1,232 +1,277 @@
 {% extends 'main.html' %}
+{% load static %}
+
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - User's University</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
-            color: #333;
-        }
-    
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-    
-        .profile-header {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-    
-        .profile-header img {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            margin-right: 25px;
-            object-fit: cover;
-            border: 2px solid #ccc;
-        }
-    
-        .profile-header h1 {
-            margin: 0;
-            font-size: 28px;
-            color: #2c3e50;
-        }
-    
-        .profile-header p {
-            margin: 5px 0;
-            font-size: 15px;
-            color: #555;
-        }
-    
-        .actions {
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-    
-        .actions a {
-            background-color: #0066cc;
-            color: white;
-            padding: 10px 18px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: background-color 0.2s ease-in-out;
-        }
-    
-        .actions a:hover {
-            background-color: #004f99;
-        }
-    
-        .listings h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-    
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
-    
-        .item-card {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            text-align: center;
-            transition: transform 0.2s ease;
-        }
-    
-        .item-card:hover {
-            transform: translateY(-4px);
-        }
-    
-        .item-card img {
-            max-width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-    
-        .item-card h3 {
-            font-size: 18px;
-            margin: 10px 0 5px;
-        }
-    
-        .item-card a {
-            color: #0073e6;
-            text-decoration: none;
-        }
-    
-        .item-card a:hover {
-            text-decoration: underline;
-        }
-    
-        .item-card p {
-            margin: 4px 0;
-            font-size: 14px;
-            color: #444;
-        }
-    
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-    
-        .btn-secondary {
-            background-color: #7f8c8d;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    
-        .btn-secondary:hover {
-            background-color: #626e70;
-        }
-    
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-        }
-    
-        .modal-content {
-            background-color: #fff;
-            margin: 8% auto;
-            padding: 25px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 450px;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-    
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #aaa;
-            cursor: pointer;
-        }
-    
-        .close:hover {
-            color: #333;
-        }
-    
-        .modal-content input[type="text"],
-        .modal-content input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-    
-        .modal-content label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+
+    .profile-header img {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin-right: 25px;
+        object-fit: cover;
+        border: 2px solid #ccc;
+        cursor: pointer;
+    }
+
+    .profile-header h1 {
+        margin: 0;
+        font-size: 28px;
+        color: #2c3e50;
+    }
+
+    .profile-header p {
+        margin: 5px 0;
+        font-size: 15px;
+        color: #555;
+    }
+
+    .actions {
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .actions a, .actions button {
+        background-color: #0066cc;
+        color: white;
+        padding: 10px 18px;
+        text-decoration: none;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .actions a:hover, .actions button:hover {
+        background-color: #004f99;
+    }
+
+    .listings h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .item-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .item-card {
+        background-color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: transform 0.2s ease;
+    }
+
+    .item-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .item-card img {
+        max-width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .item-card h3 {
+        font-size: 18px;
+        margin: 10px 0 5px;
+    }
+
+    .item-card a {
+        color: #0073e6;
+        text-decoration: none;
+    }
+
+    .item-card a:hover {
+        text-decoration: underline;
+    }
+
+    .item-card p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #444;
+    }
+
+    .btn-danger {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-danger:hover {
+        background-color: #c0392b;
+    }
+
+    .btn-secondary {
+        background-color: #7f8c8d;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+        background-color: #626e70;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 8% auto;
+        padding: 25px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 450px;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #333;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="file"],
+    .modal-content textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .modal-content label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .modal-message {
+        width: 100%;
+        text-align: center;
+        margin: 1em 0;
+        font-weight: 500;
+    }
+
+    .avatar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .no-avatars {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: #666;
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .avatar-option {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border 0.2s ease;
+    }
+
+    .avatar-option:hover,
+    .avatar-option.selected {
+        border: 2px solid #0066cc;
+    }
+
+    #profilePicPreview {
+        max-width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
 
 <div class="container">
     <div class="profile-header">
-        {% if user.profile_picture %}
-            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
         {% else %}
-            <img src="https://via.placeholder.com/100" alt="Default Profile Picture">
+            <img src="{% static 'images/avatars/default.jpg' %}" alt="Default Avatar" class="profile-pic">
         {% endif %}
         <div>
             <h1>{{ user.username }}'s Profile</h1>
-            <p>University: {{ user.university }}</p>
-            {% if user.bio %}
-                <p>Bio: {{ user.bio }}</p>
+            <p>University: {{ profile.university }}</p>
+            {% if profile.bio %}
+                <p>Bio: {{ profile.bio }}</p>
             {% endif %}
         </div>
     </div>
 
     <div class="actions">
         <a href="{% url 'create-listing' %}">Add New Listing</a>
-        <a href="{% url 'chats' %}">View Messages</a>
+        <button onclick="openProfileEditModal()" aria-label="Edit Profile">Edit Profile</button>
         <a href="{% url 'login' %}">Log Out</a>
     </div>
 
@@ -244,15 +289,13 @@
                         <h3><a href="{% url 'product' item.id %}">{{ item.textbook_name }}</a></h3>
                         <p>Course: {{ item.course }}</p>
                         <p>Condition: {{ item.condition }}</p>
-
                         <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-    <button class="btn-secondary" onclick="openEditModal('{{ item.id }}', '{{ item.textbook_name }}', '{{ item.course }}', '{{ item.condition }}')">Edit</button>
-
-    <form method="POST" action="{% url 'delete_listing' item.id %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
-</div>
+                            <button class="btn-secondary" onclick="openEditModal('{{ item.id }}', '{{ item.textbook_name }}', '{{ item.course }}', '{{ item.condition }}')">Edit</button>
+                            <form method="POST" action="{% url 'delete_listing' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -262,10 +305,10 @@
     </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- Edit Listing Modal -->
 <div id="editModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal()">×</span>
         <h2>Edit Listing</h2>
         <form id="editForm" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -283,6 +326,58 @@
     </div>
 </div>
 
+<!-- Profile Edit Modal -->
+<div id="profileEditModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeProfileEditModal()">×</span>
+        <h1>Edit Profile</h1>
+        <form id="profileEditForm" method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Profile Picture</h2>
+            <h3>Choose an avatar:</h3>
+            
+            {% if avatars %}
+            <div class="avatar-grid">
+                {% for avatar in avatars %}
+                    <label>
+                    <input type="radio" name="selected_avatar" value="{{ avatar }}">
+                    <img src="{{ MEDIA_URL }}avatars/{{ avatar }}" alt="Avatar" width="100">
+                    </label>
+                {% endfor %}
+            </div>
+            {% else %}
+                <div class="no-avatars">
+                    <p class="modal-message">No avatars available. Upload a custom image below.</p>
+                </div>
+                {% endif %}
+            
+            <input type="hidden" name="selected_avatar" id="selectedAvatar">
+            <label>Upload New Image:</label>
+            <input type="file" name="profile_picture" accept="image/*"><br>
+            <img id="profilePicPreview" src="#" alt="Preview">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile picture" width="100">
+            {% else %}
+                <img src="{{ MEDIA_URL }}avatars/default.png" alt="Default avatar" width="100">
+            {% endif %}
+            <h3>University</h3>
+            <label>University:</label>
+            <input type="text" name="university" value="{{ profile.university }}" required><br>
+            <h3>Bio</h3>
+            <label>Bio:</label>
+            <textarea name="bio" rows="4">{{ profile.bio }}</textarea><br>
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button type="submit" class="btn-secondary">Save Changes</button>
+            </div>
+        </form>
+        {% if profile.profile_picture %}
+            <form id="deletePictureForm" method="POST" action="{% url 'delete_profile_picture' %}" style="display: none;">
+                {% csrf_token %}
+            </form>
+        {% endif %}
+    </div>
+</div>
+
 <script>
     function openEditModal(id, title, course, condition) {
         document.getElementById('editModal').style.display = 'block';
@@ -297,14 +392,52 @@
         document.getElementById('editModal').style.display = 'none';
     }
 
+    function openProfileEditModal() {
+        document.getElementById('profileEditModal').style.display = 'block';
+        document.getElementById('profilePicPreview').style.display = 'none';
+        document.getElementById('selectedAvatar').value = '';
+        document.querySelectorAll('.avatar-option').forEach(img => img.classList.remove('selected'));
+    }
+
+    function closeProfileEditModal() {
+        document.getElementById('profileEditModal').style.display = 'none';
+    }
+
+    function selectAvatar(avatar) {
+        document.getElementById('selectedAvatar').value = avatar;
+        document.getElementById('profilePicPreview').src = `/media/avatars/${avatar}`;
+        document.getElementById('profilePicPreview').style.display = 'block';
+        document.querySelectorAll('.avatar-option').forEach(img => img.classList.remove('selected'));
+        document.querySelector(`.avatar-option[src="/media/avatars/${avatar}"]`).classList.add('selected');
+        document.querySelector('input[name="profile_picture"]').value = ''; // Clear file input
+    }
+
+    // Preview uploaded image
+    document.querySelector('input[name="profile_picture"]').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePicPreview').src = e.target.result;
+                document.getElementById('profilePicPreview').style.display = 'block';
+                document.getElementById('selectedAvatar').value = ''; // Clear selected avatar
+                document.querySelectorAll('.avatar-option').forEach(img => img.classList.remove('selected'));
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Close modals when clicking outside
     window.onclick = function(event) {
-        let modal = document.getElementById('editModal');
-        if (event.target === modal) {
+        let editModal = document.getElementById('editModal');
+        let profileEditModal = document.getElementById('profileEditModal');
+        if (event.target === editModal) {
             closeModal();
+        }
+        if (event.target === profileEditModal) {
+            closeProfileEditModal();
         }
     }
 </script>
 
-</body>
-</html>
 {% endblock %}

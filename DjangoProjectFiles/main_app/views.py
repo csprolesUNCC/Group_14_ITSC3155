@@ -4,18 +4,53 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views.decorators.cache import never_cache
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.urls import reverse
 
-from .models import Chat, Listing
+import os
+import io
+from .models import Chat, Listing, ViewHistory, Profile
 from .forms import ListingForm
+from PIL import Image
+from django.core.files.base import ContentFile
 
 # Create your views here.
 
+@never_cache
 @login_required(login_url='login')
 def home(request):
-    items = Listing.objects.all().order_by('-created')  # newest first
+    query = request.GET.get('q', '')
+    if query:
+        items = Listing.objects.filter(
+            Q(textbook_name__icontains=query) |
+            Q(college__icontains=query) |
+            Q(course__icontains=query) |
+            Q(class_name__icontains=query)
+        ).order_by('-created')
+    else:
+        items = Listing.objects.all().order_by('-created')
+
+    viewed_listings = request.session.get('viewed_listings', [])
+    viewed_listings = [int(id) for id in viewed_listings if Listing.objects.filter(id=id).exists()]
+    recent_viewed_items = []
+    for listing_id in viewed_listings[:8]:
+        try:
+            listing = Listing.objects.get(id=listing_id)
+            recent_viewed_items.append(listing)
+        except Listing.DoesNotExist:
+            continue
+    request.session['viewed_listings'] = viewed_listings
+    request.session.modified = True
+
+    print(f"Home View - Viewed Listings: {viewed_listings}")
+    print(f"Home View - Recent Items: {[(item.id, item.textbook_name, item.seller.username) for item in recent_viewed_items]}")
+    
     context = {
         'items': items,
-        'recent_items': []  # you can add recent view tracking later
+        'recent_items': recent_viewed_items,
+        'search_query': query,
     }
     return render(request, 'base/home.html', context)
 
@@ -52,7 +87,6 @@ def signup_view(request):
 
     return render(request, 'base/signup.html')
   
-# Uncomment once login/register works
 @login_required(login_url='login')
 def chats(request):
 
@@ -110,18 +144,87 @@ def createListing(request):
 
 
 
-@login_required
+@login_required(login_url='login')
 def profile(request):
-    user_listings = Listing.objects.filter(seller=request.user).order_by('-created')
-    return render(request, 'base/profile.html', {'user_listings': user_listings})
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user, university='', bio='')
+    
+    user_listings = Listing.objects.filter(seller=request.user)  # Changed 'user' to 'seller'
+    avatar_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
+    os.makedirs(avatar_dir, exist_ok=True)
+    avatars = [f for f in os.listdir(avatar_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    context = {
+    'user': request.user,        
+    'profile': profile,          
+    'user_listings': user_listings,
+    'avatars': avatars,
+}
+    return render(request, 'base/profile.html', context)
 
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        profile = Profile.objects.get(user=request.user)
+        
+        # Handle profile picture
+        if 'profile_picture' in request.FILES:
+            file = request.FILES['profile_picture']
+            if not file.content_type.startswith('image/'):
+                return redirect('profile')
+            try:
+                img = Image.open(file)
+                img = img.resize((150, 150), Image.LANCZOS)
+                output = io.BytesIO()
+                img.save(output, format='JPEG', quality=85)
+                output.seek(0)
+                profile.avatar.save(file.name, ContentFile(output.read()), save=True)
+            except Exception:
+                return redirect('profile')
+        elif 'selected_avatar' in request.POST and request.POST['selected_avatar']:
+            avatar_path = f"avatars/{request.POST['selected_avatar']}"
+            profile.avatar = avatar_path
+        
+        # Handle university and bio
+        profile.university = request.POST.get('university', '')
+        profile.bio = request.POST.get('bio', '')
+        profile.save()
+        
+        return redirect('profile')
+    return redirect('profile')
+
+@login_required
+def delete_profile_picture(request):
+    if request.method == 'POST':
+        profile = Profile.objects.get(user=request.user)
+        if profile.avatar:
+            profile.avatar.delete(save=True)
+        return redirect('profile')
+    return redirect('profile')
+
+@login_required(login_url='login')
 def product(request, item_id):
     item = get_object_or_404(Listing, id=item_id)
+    
+    # Track viewed listing in session
+    viewed_listings = request.session.get('viewed_listings', [])
+    item_id = int(item_id)
+    
+    # Remove item_id if already in list, then add to start
+    if item_id in viewed_listings:
+        viewed_listings.remove(item_id)
+    viewed_listings.insert(0, item_id)
+    viewed_listings = viewed_listings[:10]  # Limit to 10
+    request.session['viewed_listings'] = viewed_listings
+    request.session.modified = True
+    
+    print(f"Product View - Viewed Listing ID: {item_id}, Seller: {item.seller.username}")
+    print(f"Product View - Updated Viewed Listings: {viewed_listings}")
+    
     return render(request, 'base/product.html', {'item': item})
 
-
-
-@login_required
+@login_required(login_url='login')
 def delete_listing(request, item_id):
     # Get the item or return a 404 if it doesn't exist
     item = get_object_or_404(Listing, id=item_id)
@@ -134,29 +237,79 @@ def delete_listing(request, item_id):
         # If the user is not the seller, deny the deletion
         return redirect('profile')  # Optionally, you can redirect to an error page
     
-
-
-
-@login_required
+@login_required(login_url='login')
 def edit_listing(request, item_id):
     # Get the item or return a 404 if it doesn't exist
     item = get_object_or_404(Listing, id=item_id)
 
-    # Check if the user is the seller of the listing
-    if item.seller != request.user:
-        return redirect('profile')  # Redirect if the user is not the seller
-    
-    # Handle POST request to update the item
     if request.method == 'POST':
-        form = ListingForm(request.POST, request.FILES, instance=item)
-        if form.is_valid():
-            form.save()  # Save the updated item
-            return redirect('profile')  # Redirect to profile page after editing
-    else:
-        form = ListingForm(instance=item)  # Pre-populate form with existing data
+        listing.textbook_name = request.POST.get('textbook_name')
+        listing.course = request.POST.get('course')
+        listing.condition = request.POST.get('condition')
+        
+        # Handle image upload if a new image is provided
+        if 'image' in request.FILES:
+            listing.image = request.FILES['image']
+        
+        listing.save()
+        return redirect('profile')  # Redirect to the profile or wherever appropriate
 
-    return render(request, 'base/edit_listing.html', {'form': form, 'item': item})
+    return render(request, 'edit_listing.html', {'listing': listing})
+
+@login_required(login_url='login')
+def search_page(request):
+
+    conditions = {
+        'new':'New',
+        'like_new':'Like New',
+        'good':'Good',
+        'acceptable':'Acceptable',
+        'poor':'Poor'
+    }
+
+    selectedConds = request.GET.getlist('cond')
+
+    search = request.GET.get('search')
+
+    if not search or search == '':
+        return redirect('home')
+
+    if request.GET.get('clear') is not None:
+        cleanedURL = reverse('search') + '?search=' + request.GET.get('search')
+        return redirect(cleanedURL)
+
+    results = Listing.objects.all()
+
+    if request.GET.get('min_price') and request.GET.get('min_price') != '':
+        results = results.filter(price__gte=request.GET.get('min_price'))
+
+    if request.GET.get('max_price') and request.GET.get('max_price') != '':
+        results = results.filter(price__lte=request.GET.get('max_price'))
+
+    if request.GET.get('cond'):
+        condQ = Q()
+
+        for cond in selectedConds:
+            condQ |= Q(condition=cond)
+
+        results = results.filter(condQ)
 
 
+    results = results.filter(
+        Q(textbook_name__icontains=search)
+        | Q(college__icontains=search)
+        | Q(course__icontains=search)
+        | Q(class_name__icontains=search)
+        | Q(teacher__icontains=search)
+        | Q(isbn__icontains=search)
+    )
 
+    results = results.distinct()
 
+    context = {
+        "results" : results,
+        "conditions" : conditions,
+        "selectedConds" : selectedConds,
+    }
+
+    return render(request, 'base/search.html', context)

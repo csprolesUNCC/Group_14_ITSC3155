@@ -37,7 +37,8 @@ class Listing(models.Model):
     image = models.ImageField(upload_to='listing_images/', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    
+    views = models.IntegerField(default=0)
+    isbn = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.textbook_name
@@ -52,8 +53,26 @@ class Chat(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        null=True,
+        blank=True,
+        default='DjangoProjectFiles/avatars/default.jpg'
+    )
     university = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+
+class ViewHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        verbose_name_plural = 'View Histories'
+
+    def __str__(self):
+        return f"{self.user.username} viewed {self.listing.textbook_name}"

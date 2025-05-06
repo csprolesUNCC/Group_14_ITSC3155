@@ -1,4 +1,3 @@
-
 {% extends 'main.html' %}
 
 {% block content %}
@@ -162,13 +161,16 @@
         </div>
 
         <div class="item-picture">
+
             {% if item.image %}
+
                 
                 <img src="{{ MEDIA_URL }}{{ item.image }}" alt="Image">
 
             {% else %}
                 <p>No image available</p>
             {% endif %}
+
         </div>
 
         <div class="product-info">
