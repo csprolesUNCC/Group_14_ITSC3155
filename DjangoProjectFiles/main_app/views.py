@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.urls import reverse
 
 from .models import Chat, Listing
 from .forms import ListingForm
@@ -156,53 +157,57 @@ def edit_listing(request, item_id):
 @login_required(login_url='login')
 def search_page(request):
 
-    # 
-    # Filter all object first by filters
-    # 
-    # The check the search query in that subset
-    # 
+    conditions = {
+        'new':'New',
+        'like_new':'Like New',
+        'good':'Good',
+        'acceptable':'Acceptable',
+        'poor':'Poor'
+    }
 
-    usingFilters = request.GET.get('filtered')
+    selectedConds = request.GET.getlist('cond')
 
-    searchQuery = request.GET.get('search')
+    search = request.GET.get('search')
 
-    if searchQuery is None or searchQuery == '':
+    if not search or search == '':
         return redirect('home')
 
-    min_price = float(request.GET.get('min_price')) or float(0)
-    max_price = float(request.GET.get('max_price')) or float('inf')
+    if request.GET.get('clear') is not None:
+        cleanedURL = reverse('search') + '?search=' + request.GET.get('search')
+        return redirect(cleanedURL)
 
-    if min_price > max_price:
-        max_price = min_price
+    results = Listing.objects.all()
 
-    results = Listing.objects.filter(
-        Q(textbook_name__icontains=searchQuery) 
-        | Q(college__icontains=searchQuery) 
-        | Q(course__icontains=searchQuery) 
-        | Q(class_name__icontains=searchQuery) 
-        | Q(teacher__icontains=searchQuery)
-        | Q(isbn__icontains=searchQuery)
-        | Q(price__lte=max_price) 
-        | Q(price__gte=min_price)
+    if request.GET.get('min_price') and request.GET.get('min_price') != '':
+        results = results.filter(price__gte=request.GET.get('min_price'))
+
+    if request.GET.get('max_price') and request.GET.get('max_price') != '':
+        results = results.filter(price__lte=request.GET.get('max_price'))
+
+    if request.GET.get('cond'):
+        condQ = Q()
+
+        for cond in selectedConds:
+            condQ |= Q(condition=cond)
+
+        results = results.filter(condQ)
+
+
+    results = results.filter(
+        Q(textbook_name__icontains=search)
+        | Q(college__icontains=search)
+        | Q(course__icontains=search)
+        | Q(class_name__icontains=search)
+        | Q(teacher__icontains=search)
+        | Q(isbn__icontains=search)
     )
 
-    new = request.GET.get('new')
-    like_new = request.GET.get('like_new')
-    good = request.GET.get('good')
-    acceptable = request.GET.get('acceptable')
-    poor = request.GET.get('poor')
+    results = results.distinct()
 
     context = {
-        'searchQuery' : searchQuery,
-        'results' : results,
-        'filtered' : usingFilters,
-        'min_price' : min_price,
-        'max_price' : max_price,
-        'new' : new,
-        'like_new' : like_new,
-        'good' : good,
-        'acceptable' : acceptable,
-        'poor' : poor,
+        "results" : results,
+        "conditions" : conditions,
+        "selectedConds" : selectedConds,
     }
 
     return render(request, 'base/search.html', context)

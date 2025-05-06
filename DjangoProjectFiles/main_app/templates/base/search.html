@@ -4,39 +4,42 @@
 
 <style>
 
-.search-container {
+    .search-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        margin: 10px;
+    }
 
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 5px;
-    padding: 10px;
+    .filter-sidebar {
+        margin: 10px;
+    }
 
-}
+    .filter-sidebar-header {
+        text-align: center;
+        font-size: 24px; 
+        text-decoration: underline;
+    }
 
-.filter-sidebar {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
+    .filter {
+        padding: 2px;
+    }
 
-.filter-sidebar-header {
-    text-align: center;
-    font-size: 24px; 
-    text-decoration: underline;
-}
+    .filter-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 
-.filter {
-    padding: 2px;
-}
+    .search-results {
+        margin: 10px;
+    }
 
-.search-results {
-    padding: 2px;
-}
+    .result {
+        padding: 2px;
+    }
 
-.result {
-    padding: 2px;
-}
+    .full-width {
+        width: 100%;
+    }
 
 </style>
 
@@ -50,56 +53,44 @@
 
         <form action="" method="GET">
 
-            <input type="hidden" name="search" value="{{searchQuery}}">
-            <input type="hidden" name="filtered" value="Y">
-
+            <input type="hidden" name="search" value="{{request.GET.search}}">
+            
             <div class="filter">
                 <label>Minimum Price:</label>
-                <input type="number" name="min_price" min="0" value="{{min_price}}" step="0.01">
+                <input class="full-width" type="number" name="min_price" value="{% if request.GET.min_price %}{{request.GET.min_price}}{% endif %}" step="0.01">
             </div>
             
             <div class="filter">
                 <label>Maximum Price:</label>
-                <input type="number" name="max_price" min="0" value="{{max_price}}" step="0.01">
+                <input class="full-width" type="number" name="max_price" value="{% if request.GET.max_price %}{{request.GET.max_price}}{% endif %}" step="0.01">
             </div>
 
             <div class="filter">
                 <label>Condition:</label><br>
 
-                <input type="checkbox" name="new" value="checked" {{new}}>
-                <label>New</label><br>
+                {% for cond, label in conditions.items %}
 
-                <input type="checkbox" name="like_new" value="checked" {{like_new}}>
-                <label>Like New</label><br>
+                    <label>
+                        <input type="checkbox" name="cond" value="{{cond}}" {% if cond in selectedConds %}checked{% endif %}>
+                        {{label}}
+                    </label><br>
 
-                <input type="checkbox" name="good" value="checked" {{good}}>
-                <label>Good</label><br>
-
-                <input type="checkbox" name="acceptable" value="checked" {{acceptable}}>
-                <label>Acceptable</label><br>
-
-                <input type="checkbox" name="poor" value="checked" {{poor}}>
-                <label>Poor</label><br>
+                {% endfor %}
             </div>
 
-            <div class="filter">
-                <input type="submit" value="Apply">
+            <div class="filter filter-buttons full-width">
+                <button type="submit">Apply</button>
+                <button type="submit" name="clear" value="">Clear</button>
             </div>
 
         </form>
-
-        {% if filtered %}
-            <a href="{% url 'search' %}?search={{searchQuery}}" style="text-align: right;">Clear Filters</a>
-        {% endif %}
 
     </div>
 
     <div class="serach-results">
 
-        <h3>Results for "{{searchQuery}}"</h3>
+        <h3>Results for "{{request.GET.search}}"</h3>
         <br>
-
-
 
         {% for result in results %}
 

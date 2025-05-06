@@ -71,7 +71,10 @@
             </a>
             <!-- Search Bar -->
             <form class="d-flex mx-auto search-bar" role="search" action="{% url 'search' %}" method="GET">
-                <input class="form-control me-2" type="search" placeholder="Search by Title, Author, ISBN, or University" aria-label="Search" name="search">
+                <input class="form-control me-2" type="search" 
+                    placeholder="{% if not request.GET.search %}Search by Title, Course, ISBN, or University{% endif %}" 
+                    value="{% if request.GET.search %}{{request.GET.search}}{% endif %}"
+                    aria-label="Search" name="search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <!-- Messaging and Profile Icons -->
