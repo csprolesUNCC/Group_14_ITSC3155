@@ -53,7 +53,12 @@ class Chat(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        null=True,
+        blank=True,
+        default='DjangoProjectFiles/avatars/default.jpg'
+    )
     university = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
