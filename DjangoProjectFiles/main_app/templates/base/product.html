@@ -54,15 +54,23 @@
         }
     
         .images img {
-            width: 150px;
+            width: 300px;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
     
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            width: 400px;
+        }
+
         .item-picture img {
-            width: 300px;
-            height: auto;
+            width: auto; 
+            height: 400px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
@@ -144,6 +152,7 @@
                 justify-content: center;
             }
         }
+
     </style>
 </head>
 <body>
@@ -156,17 +165,10 @@
 
     <div class="product-main">
 
-        <div class="images">
-            <!-- addtional images -->
-        </div>
-
-        <div class="item-picture">
+        <div class="item-picture center-container">
 
             {% if item.image %}
-
-                
                 <img src="{{ MEDIA_URL }}{{ item.image }}" alt="Image">
-
             {% else %}
                 <p>No image available</p>
             {% endif %}
