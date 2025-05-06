@@ -5,10 +5,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.decorators.cache import never_cache
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 
-from .models import Chat, Listing, ViewHistory
+import os
+import io
+from .models import Chat, Listing, ViewHistory, Profile
 from .forms import ListingForm
+from PIL import Image
+from django.core.files.base import ContentFile
 
 # Create your views here.
 
@@ -140,8 +146,62 @@ def createListing(request):
 
 @login_required(login_url='login')
 def profile(request):
-    user_listings = Listing.objects.filter(seller=request.user).order_by('-created')
-    return render(request, 'base/profile.html', {'user_listings': user_listings})
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user, university='', bio='')
+    
+    user_listings = Listing.objects.filter(seller=request.user)  # Changed 'user' to 'seller'
+    avatar_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
+    os.makedirs(avatar_dir, exist_ok=True)
+    avatars = [f for f in os.listdir(avatar_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
+    context = {
+    'user': request.user,        
+    'profile': profile,          
+    'user_listings': user_listings,
+    'avatars': avatars,
+}
+    return render(request, 'base/profile.html', context)
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        profile = Profile.objects.get(user=request.user)
+        
+        # Handle profile picture
+        if 'profile_picture' in request.FILES:
+            file = request.FILES['profile_picture']
+            if not file.content_type.startswith('image/'):
+                return redirect('profile')
+            try:
+                img = Image.open(file)
+                img = img.resize((150, 150), Image.LANCZOS)
+                output = io.BytesIO()
+                img.save(output, format='JPEG', quality=85)
+                output.seek(0)
+                profile.avatar.save(file.name, ContentFile(output.read()), save=True)
+            except Exception:
+                return redirect('profile')
+        elif 'selected_avatar' in request.POST and request.POST['selected_avatar']:
+            avatar_path = f"avatars/{request.POST['selected_avatar']}"
+            profile.avatar = avatar_path
+        
+        # Handle university and bio
+        profile.university = request.POST.get('university', '')
+        profile.bio = request.POST.get('bio', '')
+        profile.save()
+        
+        return redirect('profile')
+    return redirect('profile')
+
+@login_required
+def delete_profile_picture(request):
+    if request.method == 'POST':
+        profile = Profile.objects.get(user=request.user)
+        if profile.avatar:
+            profile.avatar.delete(save=True)
+        return redirect('profile')
+    return redirect('profile')
 
 @login_required(login_url='login')
 def product(request, item_id):
