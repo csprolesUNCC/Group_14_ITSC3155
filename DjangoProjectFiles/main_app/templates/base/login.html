@@ -1,94 +1,182 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        header {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: #f8f8f8;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        form {
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background: #f9f9f9;
-            margin-top: 60px;
-        }
-        .alternative-login {
-            margin-top: 10px;
-        }
-        .alternative-login button {
-            background-color: #db4437;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: not-allowed;
-            width: 100%;
-            margin-top: 5px;
-            opacity: 0.6;
-        }
-        .alternative-login a {
-            display: block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
-    </style>
-    <script>
-        function togglePassword() {
-            var passwordField = document.getElementById('password');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    header {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 40px;
+        background: white;
+        font-size: 18px;
+    }
+
+    header h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #0064d2;
+        font-weight: bold;
+    }
+
+    form {
+        margin-top: 100px;
+        background-color: white;
+        padding: 30px 40px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    form input[type="text"],
+    form input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    form input[type="checkbox"] {
+        margin-top: 15px;
+    }
+
+    form button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background-color: #0066cc;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 20px;
+		transition: background-color 0.2s ease-in-out;
+    }
+
+    form button[type="submit"]:hover {
+        background-color: #004f99;
+    }
+
+    .alternative-login {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .alternative-login button {
+        background-color: #db4437;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: not-allowed;
+        width: 100%;
+        margin-top: 5px;
+        opacity: 0.6;
+    }
+
+    .alternative-login a {
+        display: block;
+        margin-top: 15px;
+        text-decoration: none;
+        color: #0064d2;
+        font-size: 14px;
+    }
+
+    .alternative-login a:hover {
+        text-decoration: underline;
+    }
+
+    p.error-message {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+	
+	.navbar {
+		background-color: #f8f9fa;
+		padding: 10px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1000;
+    }
+
+    .navbar-brand {
+            width: 50px;
+    }
+	
+  </style>
+  <script>
+    function togglePassword() {
+        var passwordField = document.getElementById('password');
+        passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 </head>
 <body>
-    <header>
-        <h1>LOGO</h1>
-        <nav>
-            
-            <a href="{% url 'login' %}">Login</a>
-        </nav>
-    </header>
-    
-    <form method="POST">
-        {% csrf_token %}
-        
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
-        
-        <input type="text" id="username" name="username" placeholder="Username" required><br>
-        <input type="password" id="password" name="password" placeholder="Password" required><br>
-        <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password<br>
-        <button type="submit">Login</button>
-        
-        <div class="alternative-login">
-            <button type="button" disabled>Login with Google</button>
-            <a href="{% url 'signup' %}">Sign up</a>
+  <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <!-- Logo (replaced with text) -->
+            <a href="{% url 'home' %}">
+                <img src="{% static 'Your_paragraph_text_2.png' %}" class="navbar-brand">
+            </a>
+            <!-- Sign Up Link -->
+            <div class="d-flex">
+                <a href="{% url 'signup' %}" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-cart"></i> Sign Up
+                </a>
+            </div>
         </div>
-    </form>
+    </nav>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    {% if error %}
+      <p class="error-message">{{ error }}</p>
+    {% endif %}
+
+    <input type="text" id="username" name="username" placeholder="Username" required>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <label>
+      <input type="checkbox" id="showPassword" onclick="togglePassword()"> Show Password
+    </label>
+    <button type="submit" class="actions">Login</button>
+
+    <div class="alternative-login">
+      <button type="button" disabled>Login with Google</button>
+      <a href="{% url 'signup' %}">Don't have an account? Sign up</a>
+    </div>
+  </form>
 </body>
 </html>
