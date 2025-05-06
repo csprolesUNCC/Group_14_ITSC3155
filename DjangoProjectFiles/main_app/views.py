@@ -109,18 +109,17 @@ def createListing(request):
 
 
 
-@login_required
+@login_required(login_url='login')
 def profile(request):
     user_listings = Listing.objects.filter(seller=request.user).order_by('-created')
     return render(request, 'base/profile.html', {'user_listings': user_listings})
 
+@login_required(login_url='login')
 def product(request, item_id):
     item = get_object_or_404(Listing, id=item_id)
     return render(request, 'base/product.html', {'item': item})
 
-
-
-@login_required
+@login_required(login_url='login')
 def delete_listing(request, item_id):
     # Get the item or return a 404 if it doesn't exist
     item = get_object_or_404(Listing, id=item_id)
@@ -133,10 +132,7 @@ def delete_listing(request, item_id):
         # If the user is not the seller, deny the deletion
         return redirect('profile')  # Optionally, you can redirect to an error page
     
-
-
-
-@login_required
+@login_required(login_url='login')
 def edit_listing(request, item_id):
     # Get the item or return a 404 if it doesn't exist
     item = get_object_or_404(Listing, id=item_id)
@@ -157,28 +153,50 @@ def edit_listing(request, item_id):
     return render(request, 'base/edit_listing.html', {'form': form, 'item': item})
 
 
-@login_required
+@login_required(login_url='login')
 def search_page(request):
 
-    searchQuery = request.GET.get('search');
+    usingFilters = request.GET.get('filtered')
 
-    if searchQuery is None or searchQuery is '':
+    searchQuery = request.GET.get('search')
+
+    if searchQuery is None or searchQuery == '':
         return redirect('home')
-    
-    results = set(
-        Listing.objects.filter(
-            Q(textbook_name__iconatins=searchQuery) 
-            | Q(college__iconatins=searchQuery) 
-            | Q(course__iconatins=searchQuery) 
-            | Q(class_name__iconatins=searchQuery) 
-            | Q(teacher__iconatins=searchQuery)
-            | Q(isbn__iconatins=searchQuery)
-        )
+
+    min_price = float(request.GET.get('min_price')) or float(0)
+    max_price = float(request.GET.get('max_price')) or float('inf')
+
+    if min_price > max_price:
+        max_price = min_price
+
+    results = Listing.objects.filter(
+        Q(textbook_name__icontains=searchQuery) 
+        | Q(college__icontains=searchQuery) 
+        | Q(course__icontains=searchQuery) 
+        | Q(class_name__icontains=searchQuery) 
+        | Q(teacher__icontains=searchQuery)
+        | Q(isbn__icontains=searchQuery)
+        | Q(price__lte=max_price) 
+        | Q(price__gte=min_price)
     )
+
+    new = request.GET.get('new')
+    like_new = request.GET.get('like_new')
+    good = request.GET.get('good')
+    acceptable = request.GET.get('acceptable')
+    poor = request.GET.get('poor')
 
     context = {
         'searchQuery' : searchQuery,
-        'results' : results
+        'results' : results,
+        'filtered' : usingFilters,
+        'min_price' : min_price,
+        'max_price' : max_price,
+        'new' : new,
+        'like_new' : like_new,
+        'good' : good,
+        'acceptable' : acceptable,
+        'poor' : poor,
     }
 
     return render(request, 'base/search.html', context)

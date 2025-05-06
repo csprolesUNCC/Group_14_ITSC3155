@@ -8,15 +8,33 @@
 
     display: grid;
     grid-template-columns: 300px 1fr;
+    gap: 5px;
     padding: 10px;
 
 }
 
 .filter-sidebar {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.filter-sidebar-header {
+    text-align: center;
+    font-size: 24px; 
+    text-decoration: underline;
+}
+
+.filter {
     padding: 2px;
 }
 
 .search-results {
+    padding: 2px;
+}
+
+.result {
     padding: 2px;
 }
 
@@ -26,17 +44,72 @@
 
     <div class="filter-sidebar">
 
-        <h1>Filters</h1>
+        <div class="filter-sidebar-header">
+            <b>Filters</b>
+        </div>
+
+        <form action="" method="GET">
+
+            <input type="hidden" name="search" value="{{searchQuery}}">
+            <input type="hidden" name="filtered" value="Y">
+
+            <div class="filter">
+                <label>Minimum Price:</label>
+                <input type="number" name="min_price" min="0" value="{{min_price}}" step="0.01">
+            </div>
+            
+            <div class="filter">
+                <label>Maximum Price:</label>
+                <input type="number" name="max_price" min="0" value="{{max_price}}" step="0.01">
+            </div>
+
+            <div class="filter">
+                <label>Condition:</label><br>
+
+                <input type="checkbox" name="new" value="checked" {{new}}>
+                <label>New</label><br>
+
+                <input type="checkbox" name="like_new" value="checked" {{like_new}}>
+                <label>Like New</label><br>
+
+                <input type="checkbox" name="good" value="checked" {{good}}>
+                <label>Good</label><br>
+
+                <input type="checkbox" name="acceptable" value="checked" {{acceptable}}>
+                <label>Acceptable</label><br>
+
+                <input type="checkbox" name="poor" value="checked" {{poor}}>
+                <label>Poor</label><br>
+            </div>
+
+            <div class="filter">
+                <input type="submit" value="Apply">
+            </div>
+
+        </form>
+
+        {% if filtered %}
+            <a href="{% url 'search' %}?search={{searchQuery}}" style="text-align: right;">Clear Filters</a>
+        {% endif %}
 
     </div>
 
     <div class="serach-results">
 
-        <h3>results for "{{searchQuery}}"</h3>
+        <h3>Results for "{{searchQuery}}"</h3>
+        <br>
+
+
 
         {% for result in results %}
 
-        <a>{{result.textbook_name}}</a>
+            <div class="result">
+                <a>{{result.textbook_name}}</a>
+            </div>
+
+        {% empty %}
+
+            <a>No results found!</a>
 
         {% endfor %}
 
