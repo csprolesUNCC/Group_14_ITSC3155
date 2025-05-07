@@ -217,7 +217,8 @@
                             {% endif %}
                         </div>
                         <h5 class="item-name">{{ item.textbook_name }}</h5>
-                        <p class="item-price">{{ item.college }} - {{ item.course }}</p>
+                        <p class="item-name">{{ item.college }} - {{ item.course }}</p>
+                        <h2 class="item-price">${{ item.price }}</h2>
                     </div>
                 {% empty %}
                     <p>No items available.</p>
